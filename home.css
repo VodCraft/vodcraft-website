@@ -5,9 +5,10 @@
   min-height: 100vh;
   align-items: center;
   flex-direction: column;
+  justify-content: center;
 }
 .home-link {
-  top: 517px;
+  top: 585px;
   left: 0px;
   color: rgb(0, 0, 0);
   right: 0px;
@@ -20,7 +21,7 @@
   text-decoration: none;
 }
 .home-link1 {
-  top: 563px;
+  top: 634px;
   left: 0px;
   color: rgb(0, 0, 0);
   right: 0px;
@@ -31,11 +32,6 @@
   padding-left: 0px;
   padding-right: 0px;
   text-decoration: none;
-}
-.home-image {
-  width: 100%;
-  height: 1212px;
-  object-fit: cover;
 }
 .home-text {
   top: 121px;
@@ -49,22 +45,7 @@
   padding-left: 5px;
   border-radius: var(--dl-radius-radius-radius4);
 }
-.home-text01 {
-  top: 184px;
-  left: 0px;
-  color: rgb(255, 255, 255);
-  right: 0px;
-  width: 735px;
-  height: 71px;
-  margin: auto;
-  z-index: 100;
-  position: absolute;
-  text-align: center;
-  padding-left: 62px;
-  border-radius: var(--dl-radius-radius-radius4);
-  padding-right: 62px;
-}
-.home-image1 {
+.home-image {
   top: 22px;
   left: 0px;
   right: 0px;
@@ -73,8 +54,8 @@
   position: absolute;
   object-fit: cover;
 }
-.home-text04 {
-  top: 276px;
+.home-text01 {
+  top: 223px;
   left: 0px;
   color: rgb(255, 255, 255);
   right: 0px;
@@ -82,32 +63,65 @@
   position: absolute;
   text-align: center;
 }
-.home-text07 {
-  text-transform: uppercase;
-  text-decoration: underline;
+.home-text05 {
+  top: 336px;
+  left: 0px;
+  color: rgb(255, 255, 255);
+  right: 0px;
+  margin: auto;
+  position: absolute;
+  text-align: center;
 }
 .home-text08 {
   text-transform: uppercase;
   text-decoration: underline;
 }
-.home-text11 {
+.home-text09 {
+  text-transform: uppercase;
   text-decoration: underline;
 }
-.home-text15 {
+.home-text12 {
   text-decoration: underline;
 }
-.home-text19 {
+.home-text16 {
+  text-decoration: underline;
+}
+.home-text20 {
   text-transform: capitalize;
   text-decoration: underline;
 }
-.home-text23 {
+.home-text24 {
   text-transform: capitalize;
   text-decoration: underline;
+}
+.home-image1 {
+  width: 100%;
+  height: 1212px;
+  object-fit: cover;
 }
 @media(max-width: 479px) {
+  .home-link {
+    top: 642px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+  }
+  .home-link1 {
+    top: 707px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+  }
   .home-text01 {
-    width: 479px;
-    padding-left: var(--dl-space-space-twounits);
-    padding-right: var(--dl-space-space-twounits);
+    top: 225px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+  }
+  .home-text05 {
+    top: 356px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
   }
 }
