@@ -33,6 +33,19 @@
   padding-right: 0px;
   text-decoration: none;
 }
+.home-link2 {
+  top: 700px;
+  left: 0px;
+  color: rgb(0, 0, 0);
+  right: 0px;
+  width: 180px;
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-decoration: none;
+}
 .home-text {
   top: 121px;
   left: 0px;
