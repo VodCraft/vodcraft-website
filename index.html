@@ -1,124 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>VodCraft</title>
-    <meta property="og:title" content="VodCraft" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8" />
-    <meta property="twitter:card" content="summary_large_image" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VodCraft | SMP</title>
+    
+    <link rel="icon" type="image/png" href="public/playground_assets/vodcraft-200h.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
 
-    <style data-tag="reset-style-sheet">
-      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --mc-green: #55FF55;
+            --bg-deep: #050505;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-deep);
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .hero-background {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.98)), 
+                              url('public/playground_assets/2021-12-05_21.58.13-1300h.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .liquid-nav {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Minecraft Style Cards */
+        .mc-slot {
+            background: #2a2a2a;
+            border: 4px solid #1e1e1e;
+            border-top-color: #3f3f3f;
+            border-left-color: #3f3f3f;
+            image-rendering: pixelated;
+            transition: all 0.2s ease;
+        }
+
+        .mc-slot:hover {
+            border-color: var(--mc-green);
+            background: #333;
+            transform: scale(1.02);
+        }
+
+        .xp-bar {
+            height: 4px;
+            background: #1a1a1a;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: var(--mc-green);
+            box-shadow: 0 0 10px var(--mc-green);
+        }
+
+        .status-dot {
+            height: 8px; width: 8px; border-radius: 50%; display: inline-block;
+        }
+        .online-glow { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
+        .offline-glow { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
+
+        .copy-trigger { position: relative; cursor: pointer; }
+        .copy-feedback {
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+            background: var(--mc-green); color: black; font-size: 10px; font-weight: 800;
+            padding: 4px 8px; opacity: 0; transition: 0.3s; pointer-events: none;
+        }
+        .copy-feedback.show { opacity: 1; top: -40px; }
+		
+        .scroll-indicator-container {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        @keyframes scrollMove {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(15px); opacity: 0; }
+        }
+        .scroll-dot {
+            width: 2px; height: 10px; background: #10b981;
+            animation: scrollMove 2s infinite ease-in-out;
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); }
     </style>
-    <style data-tag="default-style-sheet">
-      html {
-        font-family: Inter;
-        font-size: 16px;
-      }
+</head>
+<body>
 
-      body {
-        font-weight: 400;
-        font-style:normal;
-        text-decoration: none;
-        text-transform: none;
-        letter-spacing: normal;
-        line-height: 1.15;
-        color: var(--dl-color-gray-black);
-        background-color: var(--dl-color-gray-white);
+    <div class="hero-background"></div>
 
-      }
-    </style>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
-      data-tag="font"
-    />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div>
-      <link href="./home.css" rel="stylesheet" />
-
-      <div class="home-container">
-        <a
-          href="http://vodcraft.ddns.net/eaglercraft/"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="home-link button"
-        >
-          Join on EaglerX 1.8.8
-        </a>
-        <a
-          href="https://discord.gg/sH7G5qDSPe"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="home-link1 button"
-        >
-          Discord
-        </a>
-        <a
-          href="http://vodcraft.ddns.net/eaglercraft/old"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="home-link2 button"
-        >
-          Join Eagler 1.5.2
-        </a>
-        <h1 class="home-text">VodCraft Survival Server</h1>
-        <img
-          alt="image"
-          src="public/playground_assets/vodcraft-200h.png"
-          class="home-image"
-        />
-        <span class="home-text01">
-          <span>
-            VodCraft is a small survival server with about 10 people playing it.
-            It contains guns and other features.
-          </span>
-          <br />
-          <span>
-            This used to be a private server I played with my cousins and
-            friends but now deciced to make it publicly available.
-          </span>
-        </span>
-        <span class="home-text05">
-          <span>Server IPs:</span>
-          <br />
-          <br class="home-text08" />
-          <span class="home-text09">[1.8-1.19] Java</span>
-          <br />
-          <br />
-          <span class="home-text12">Java:</span>
-          <span>vodcraft.servegame.com</span>
-          <br />
-          <br />
-          <span class="home-text16">Cracked Java:</span>
-          <span>&nbsp;vodcrack.servegame.com</span>
-          <br />
-          <br />
-          <span class="home-text20">Bedrock:</span>
-          <span>(add "VodCraft3154") as a friend.</span>
-          <br />
-          <br />
-          <span class="home-text24">EaglercraftX:</span>
-          <span>
-            Click on the button below that says "Join on Eaglercraft."
-          </span>
-			<script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
-			new Crate({
-			server: '1012808293888045056', // VodCraft
-			channel: '1040475454357913660' // #general
-			})
-			</script>
-          <br />
-          <br />
-        </span>
-        <img
-          alt="image"
-          src="public/playground_assets/2021-12-05_21.58.13-1300h.png"
-          class="home-image1"
-        />
-      </div>
+    <div class="fixed top-6 w-full flex justify-center z-[100] px-4">
+        <nav class="liquid-nav flex items-center justify-between w-full max-w-4xl px-6 py-3">
+            <div class="flex items-center gap-3">
+                <img src="public/playground_assets/vodcraft-200h.png" alt="VodCraft" class="h-8 w-8 object-contain">
+                <span class="font-bold tracking-tighter text-lg uppercase">VodCraft</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-[13px] font-medium text-gray-400">
+                <a href="#ips" class="hover:text-emerald-400 transition-colors">Server IPs</a>
+                <a href="#moments" class="hover:text-emerald-400 transition-colors">Key Moments</a>
+                <a href="https://discord.gg/sH7G5qDSPe" target="_blank" class="hover:text-emerald-400 transition-colors">Discord</a>
+            </div>
+            <div id="live-status-pill" class="text-[11px] font-bold text-gray-500 border border-white/10 px-4 py-2 rounded-full uppercase tracking-wider flex items-center gap-2">
+                <span class="status-dot offline-glow"></span> Checking...
+            </div>
+        </nav>
     </div>
-  </body>
+
+    <main class="relative z-20">
+        <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20">
+            </div>
+            <h1 id="hero-title" class="text-6xl md:text-8xl font-semibold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400 z-30">
+                VodCraft Survival.
+            </h1>
+            <p id="hero-sub" class="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mb-12 z-30">
+                A small semi-anarchy SMP.
+            </p>
+
+            <div id="hero-cta" class="flex flex-col md:flex-row gap-4 mb-20 z-30 w-full justify-center items-center">
+                <a href="https://discord.gg/sH7G5qDSPe" target="_blank" class="magnetic bg-white text-black w-64 h-14 rounded-full text-lg font-bold flex items-center justify-center transition-colors hover:bg-emerald-50">
+                    Join Discord
+                </a>
+                <a href="#ips" class="magnetic border border-white/20 text-white w-64 h-14 rounded-full text-lg font-bold flex items-center justify-center transition-colors hover:bg-white/5">
+                    Connection Info
+                </a>
+            </div>
+
+            <div class="scroll-indicator-container">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold mb-2">Scroll for more info</span>
+                <div class="w-[1px] h-10 bg-white/20 relative">
+                    <div class="scroll-dot mx-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ips" class="py-32 px-4 relative z-30">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card reveal p-10 rounded-[40px] border-l-4 border-emerald-500">
+                    <h3 class="text-emerald-400 font-bold mb-2 uppercase tracking-widest text-sm">How to join</h3>
+                    <h2 class="text-3xl font-bold mb-6 text-white">Join the Server</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="copy-trigger" onclick="copyText('vodcraft.ddns.net', this)">
+                            <div class="copy-feedback">COPIED!</div>
+                            <p class="text-gray-500 text-sm mb-1">Java Edition (Main: 1.21.4)</p>
+                            <code class="text-xl text-emerald-400 font-mono block p-3 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all">vodcraft.ddns.net</code>
+                            <p class="text-[10px] text-gray-600 mt-1 uppercase tracking-tighter italic">Compatible with clients 1.7 - Latest</p>
+                        </div>
+                        <div class="copy-trigger" onclick="copyText('vodcrack.ddns.net', this)">
+                            <div class="copy-feedback">COPIED!</div>
+                            <p class="text-gray-500 text-sm mb-1">Cracked Java</p>
+                            <code class="text-xl text-emerald-400 font-mono block p-3 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all">vodcrack.ddns.net</code>
+                            <p class="text-[10px] text-gray-600 mt-1 uppercase tracking-tighter italic">Compatible with clients 1.7 - Latest</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm mb-1">Bedrock Support (<a href="https://geysermc.org/" target="_blank" class="underline hover:text-white">GeyserMC</a>) (<a href="https://github.com/MCXboxBroadcast/Broadcaster" target="_blank" class="underline hover:text-white">MCXboxBroadcast</a>)</p>
+                            <p class="text-lg text-white">Add friend: <span class="text-emerald-400 font-bold">VodCraft3154</span></p>
+                        </div>
+                        <div class="pt-4 border-t border-white/5">
+                            <p class="text-gray-400 text-xs mb-3 font-bold uppercase">Web/Eagler Connection (Use your own client)</p>
+                            <div class="flex flex-col gap-3">
+                                <div class="copy-trigger" onclick="copyText('wss://vodcraft.ddns.net/server', this)">
+                                    <div class="copy-feedback">COPIED!</div>
+                                    <span class="text-[10px] text-gray-500 block uppercase">Eagler 1.12 Address</span>
+                                    <code class="text-xs text-gray-300 bg-black/40 p-2 rounded block">COMING SOON</code>
+                                </div>
+                                <div class="copy-trigger" onclick="copyText('wss://vodcraft.ddns.net/server1.8', this)">
+                                    <div class="copy-feedback">COPIED!</div>
+                                    <span class="text-[10px] text-gray-500 block uppercase">Eagler 1.8 Address</span>
+                                    <code class="text-xs text-gray-300 bg-black/40 p-2 rounded block">COMING SOON</code>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-1">
+                                <p class="text-[9px] text-red-400 uppercase font-bold">● Eaglercraft 1.5 is NOT supported.</p>
+                                <p class="text-[9px] text-gray-600 uppercase italic">● Versions under 1.17 cannot see below Y=0 due to Minecraft limitations.</p>
+                                <p class="text-[9px] text-gray-600 uppercase italic">● Versions below 1.21.4 may experience minor feature bugs.</p>
+                                <p class="text-[9px] text-gray-600 uppercase italic">● This is blocked under most school networks because of DYNDNS.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card reveal p-10 rounded-[40px] flex flex-col justify-center">
+                    <h3 class="text-emerald-400 font-bold mb-2 uppercase tracking-widest text-sm">about</h3>
+                    <h2 class="text-3xl font-bold mb-4 text-white">About VodCraft</h2>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        VodCraft is small semi-anarchy SMP that used to be prviate among certain people. VodCraft features Minepacks, Hammers, and more. This website is still under construction so this about page will be updated in the upcoming future.
+                    </p>
+                    <div id="status-display" class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+                            <span class="text-gray-500 text-[10px] block uppercase mb-1">Live Status</span>
+                            <span id="stat-online" class="text-white font-bold">OFFLINE</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+                            <span class="text-gray-500 text-[10px] block uppercase mb-1">Players</span>
+                            <span id="stat-players" class="text-white font-bold">0 / 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="moments" class="py-32 px-4 relative z-30">
+
+<section id="moments" class="py-32 px-4 relative z-30">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-12 reveal">
+            <h2 class="text-4xl font-black italic uppercase tracking-tighter text-white">Moments</h2>
+            <div class="h-1 w-20 bg-emerald-500 mt-2"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="mc-slot p-6 reveal">
+                <div class="aspect-square bg-black/40 mb-4 overflow-hidden border-2 border-white/5">
+                    <img src="public/playground_assets/2021-12-05_21.58.13-1300h.png" class="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-500" alt="Founding">
+                </div>
+                <h4 class="text-emerald-400 font-bold text-lg uppercase tracking-tight">Spawn</h4>
+                <p class="text-gray-400 text-sm mt-2">Spawn has always looked like this🫩</p>
+                <div class="xp-bar"><div class="xp-progress w-full"></div></div>
+            </div>
+
+            <div class="mc-slot p-6 reveal" style="transition-delay: 0.1s;">
+                <div class="aspect-square bg-black/40 mb-4 overflow-hidden border-2 border-white/5">
+                    <img src="public/playground_assets/2022-09-05_12.49.54.png" class="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-500" alt="Public Shift">
+                </div>
+                <h4 class="text-emerald-400 font-bold text-lg uppercase tracking-tight">Other Pics of Spawn</h4>
+                <p class="text-gray-400 text-sm mt-2">Just another pic of spawn.</p>
+                <div class="xp-bar"><div class="xp-progress w-[60%]"></div></div>
+            </div>
+
+            <div class="mc-slot p-6 reveal" style="transition-delay: 0.2s;">
+                <div class="aspect-square bg-black/40 mb-4 overflow-hidden border-2 border-white/5">
+                    <img src="public/playground_assets/" class="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-500" alt="Other">
+                </div>
+                <h4 class="text-emerald-400 font-bold text-lg uppercase tracking-tight">Let me know</h4>
+                <p class="text-gray-400 text-sm mt-2">Let me know what I should put here for the next generation of VodCraft.</p>
+                <div class="xp-bar"><div class="xp-progress w-[10%] animate-pulse"></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+        </section>
+
+        <footer class="py-20 border-t border-white/5 text-center text-gray-500 text-sm relative z-30">
+            <p class="mb-10">&copy; 2026 VodCraft. Built with the help of some tools (ifykyk).</p>
+            <div class="flex flex-col items-center gap-4 w-full">
+                <span class="text-[10px] uppercase tracking-[0.2em] text-gray-600 font-bold">Managed & Hosted By</span>
+                <a href="https://github.com" target="_blank" class="hover:opacity-80 transition-opacity flex justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Espinal" class="h-10 w-auto">
+                </a>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+        new Crate({ server: '1012808293888045056', channel: '1040475115189698662' })
+    </script>
+
+    <script>
+        function copyText(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                const feedback = element.querySelector('.copy-feedback');
+                feedback.classList.add('show');
+                setTimeout(() => feedback.classList.remove('show'), 2000);
+            });
+        }
+
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('https://api.mcsrvstat.us/2/vodcraft.ddns.net');
+                const data = await response.json();
+                const pill = document.getElementById('live-status-pill');
+                const statOnline = document.getElementById('stat-online');
+                const statPlayers = document.getElementById('stat-players');
+
+                if (data.online) {
+                    pill.innerHTML = `<span class="status-dot online-glow"></span> ${data.players.online} Online`;
+                    pill.classList.add('text-emerald-400', 'border-emerald-500/30');
+                    statOnline.innerText = "ONLINE";
+                    statOnline.className = "text-emerald-400 font-bold";
+                    statPlayers.innerText = `${data.players.online} / ${data.players.max}`;
+                } else {
+                    pill.innerHTML = `<span class="status-dot offline-glow"></span> Maintenance`;
+                    statOnline.innerText = "OFFLINE";
+                    statOnline.className = "text-red-500 font-bold";
+                }
+            } catch (error) { console.error('Status Error'); }
+        }
+        updateStatus();
+        setInterval(updateStatus, 60000);
+
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from("#hero-title", { opacity: 0, y: 50, duration: 1.2, ease: "power4.out" });
+        gsap.from("#hero-sub", { opacity: 0, y: 30, duration: 1.2, delay: 0.2, ease: "power4.out" });
+
+        gsap.utils.toArray(".reveal").forEach(elem => {
+            gsap.to(elem, {
+                scrollTrigger: { trigger: elem, start: "top 90%" },
+                opacity: 1, y: 0, duration: 1, ease: "power3.out"
+            });
+        });
+
+        document.querySelectorAll('.magnetic').forEach((btn) => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.4 });
+            });
+            btn.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.3)" }));
+        });
+    </script>
+</body>
 </html>
